@@ -5,32 +5,41 @@ import pro.sky.java.course2.employeebookapplication.data.Employee;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class DepartmentService {
     private final EmployeeService employeeService;
 
-    public List<Employee> printDepartmentEmployee(int department) {
-        return employeeService.getAllEmployees().stream()
-                .filter(e -> e.getDepartment() == department)
-                .collect(Collectors.toList());
-    }
-
     public DepartmentService(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    public Optional<Employee> getMaxSalary(int department) {
-        return employeeService.getAllEmployees().stream()
-                .filter(e -> e.getDepartment() == department)
-                .max(Comparator.comparingInt(Employee::getSalary));
+    public List<Employee> getDepartmentEmployee(Integer department) {
+        Stream<Employee> employeeStream = employeeService.getAllEmployees().stream();
+        if (department != null) {
+            employeeStream = employeeStream.filter(employee -> employee.getDepartment() == department);
+        }
+        return employeeStream.sorted(
+                Comparator.comparing(Employee::getDepartment)
+                        .thenComparing(Employee::getSurname)
+                        .thenComparing(Employee::getName)
+                        .thenComparing(Employee::getMiddleName)
+        ).collect(Collectors.toList());
     }
 
-    public Optional<Employee> getMinimumSalary(int department) {
+    public Employee getMaxSalary(int department) {
         return employeeService.getAllEmployees().stream()
                 .filter(e -> e.getDepartment() == department)
-                .min(Comparator.comparingInt(Employee::getSalary));
+                .max(Comparator.comparingInt(Employee::getSalary))
+                .orElseThrow();
+    }
+
+    public Employee getMinimumSalary(int department) {
+        return employeeService.getAllEmployees().stream()
+                .filter(e -> e.getDepartment() == department)
+                .min(Comparator.comparingInt(Employee::getSalary))
+                .orElseThrow();
     }
 }
