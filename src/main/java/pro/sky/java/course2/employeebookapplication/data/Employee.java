@@ -15,6 +15,7 @@ public class Employee {
         this.middleName = middleName;
         this.department = department;
         this.salary = salary;
+
     }
 
     public String getName() {
