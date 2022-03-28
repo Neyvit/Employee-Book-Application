@@ -28,15 +28,15 @@ public class EmployeeBookController {
 
     @GetMapping("/remove")
     public String removeEmployee(@RequestParam String surname,
-                                   @RequestParam String name,
-                                   @RequestParam String middleName) throws EmployeeNotFoundException {
+                                 @RequestParam String name,
+                                 @RequestParam String middleName) {
         return "Сотрудник " + employeeService.removeEmployee(surname, name, middleName) + " удалён.";
     }
 
     @GetMapping("/find")
     public Employee findEmployee(@RequestParam String surname,
                                  @RequestParam String name,
-                                 @RequestParam String middleName) throws EmployeeNotFoundException {
+                                 @RequestParam String middleName) {
         return employeeService.findEmployee(surname, name, middleName);
     }
 }
